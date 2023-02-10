@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title> found [[${files.size()}]] files </title>
+    <!--    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">-->
+    <style>
+        span.c24 {
+            background-color: lightcoral;
+            color: blue;
+        }
+        span.c23 {
+            background-color: lightgreen;
+            color: blue;
+        }
+        span.c22 {
+            background-color: lightblue;
+            color: brown;
+        }
+        span.c21 {
+            background-color: lightcyan;
+            color: brown;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header">&nbsp;</div>
+<div class="container" align="center">
+    <div th:replace="fragments/navigator :: navigator">&nbsp;</div>
+    <hr/>
+        <span class="row" th:each="file : ${files}"
+              th:class="${'c' + #strings.substring(file,2,4)}"
+              th:with="fd=${#strings.replace(file,'-','/')}">
+            <a th:href="@{/{id}(id=${file})}" >[[${#strings.substring(fd,2,10)}]]</a>
+        </span>
+    <hr/>
+    <div th:replace="fragments/navigator :: navigator">&nbsp;</div>
+    <br>
+    <div th:replace="fragments/footer :: footer">&nbsp;</div>
+</div>
+</body>
+</html>

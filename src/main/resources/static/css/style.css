@@ -1,0 +1,198 @@
+body{
+	font-family: verdana;
+}
+
+header{
+}
+
+td{
+	color: white;
+}
+
+hr {
+	display: block;
+	height: 1px;
+	border: 0;
+	border-top: 1px solid #ccc;
+	margin: 1em 0;
+	padding: 0;
+}
+
+.menu {
+	background: #5381b8;
+	border: 0;
+	font-size: 16px;
+}
+
+.header-menu {
+	 margin-top: 5px;
+	 border-right: 2px solid #cc9933;
+	 width: 150px;
+}
+
+.navbar-default .navbar-nav > li > a{
+	color: #fff;
+	text-transform: uppercase;
+}
+/*
+.header-titletext-1 {
+	font-size: 80px;
+	text-transform: uppercase;
+	color: #cc9933;
+	text-align: left;
+	margin-bottom: -25px;
+	margin-top: -20px;
+	margin-left: -30px;
+}*/
+
+.header-titletext-2 {
+	font-size: 20px;
+	margin-top: 40px;
+
+}
+
+.header-titleicon {
+	text-align: right;
+	margin-top: 10px;
+}
+
+.header-icon {
+	max-width: 75%;
+}
+
+.start-infotext {
+	color: #666666;
+}
+.callbutton {
+	color: #002953;
+	margin-top: 10px;
+}
+
+.cardrequestbutton {
+	color: #9c0e0e;
+	margin-top: 10px;
+}
+
+.offertitle {
+	color: #002953;
+	font-weight: bold;
+	font-size: 15px;
+}
+
+.callrequestbutton {
+	color: #ffffff;
+	background-color: #9c0e0e;
+}
+.feedback-img {
+	max-height: 300px;
+}
+
+.feedback-inputGroup {
+
+}
+
+.feedback-title-1 {
+	color: #cc9933;
+	text-transform: uppercase;
+	font-size: 20px;
+}
+
+.feedback-title-2 {
+	color: #666666;
+	margin-bottom: 20px;
+}
+.footer-text-banktitle {
+	text-align: right;
+}
+
+
+@media only screen and (max-width: 1200px) {
+	.header-titletext-1 {
+		margin-top: 0px;
+		margin-top: -20px;
+		margin-left: -10px;
+	}
+	.header-icon {
+		max-width: 100%;
+	}
+}
+
+@media only screen and (max-width: 992px) {
+	.header-titletext-1 {
+		font-size: 60px;
+		margin-top: -5px;
+		margin-bottom: 0px;
+		margin-left: 30px;
+	}
+	.header-icon {
+		max-width: 100%;
+	}
+}
+
+@media only screen and (max-width: 767px) {
+	.header-menu {
+		display: none;
+	}
+
+	.header-titleicon {
+		/*display: none;*/
+	}
+	.header-icon {
+		max-width: 100%;
+	}
+
+	/*.start-img {
+		display: none;
+	}*/
+
+	.feedback-img {
+		display: none;
+	}
+	.start-infotext {
+		font-size: 14px;
+	}
+
+	.callbutton, .cardrequestbutton {
+		font-size: 14px;
+	}
+
+	.footer-text {
+		font-size: 14px;
+	}
+
+	.footer-text-banktitle {
+		text-align: left;
+	}
+
+	.header-titletext-1 {
+		font-size: 50px;
+		margin-top: 0px;
+		margin-bottom: 0px;
+		margin-left: 0px;
+	}
+
+	.header-titletext-2 {
+		display: none;
+	}
+
+	.feedback-inputGroup {
+		margin-top: 0px;
+	}
+
+	.feedback-title-1, .feedback-title-2 {
+		display: none;
+	}
+}
+
+ tr.error {
+	 background-color: red;
+	 color: white;
+ }
+tr.info {
+	background-color: cyan;
+	color: black;
+}
+
+@media only screen and (max-width: 480px) {
+
+}

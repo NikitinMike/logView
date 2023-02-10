@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <!--    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">-->
+    <style>
+        tr.error {
+            background-color: red;
+            color: white;
+        }
+
+        tr.info {
+            background-color: gold;
+            color: black;
+        }
+
+        thead {
+            background-color: darkcyan;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header">&nbsp;</div>
+<div class="container" align="center">
+    <div th:replace="fragments/navigator :: navigator">&nbsp;</div>
+    <hr/>
+    <table>
+        <thead align="center">
+        <td th:text="${date}">дата/время</td>
+        <td><a th:href="@{/order/login}">логин</a></td>
+        <td><a th:href="@{/order/ip}">IP адрес</a></td>
+        <td><a th:href="@{/order/phone}">ID устройства</a></td>
+        <td>
+            <a th:href="@{/order/date}"> информация </a>
+            /
+            <a th:href="@{/errors}"> только ошибки и регистрации </a>
+        </td>
+        </thead>
+        <div class="row">
+            <tr th:each="message : ${messages}"
+                th:class="${message.title eq 'ERROR'}? 'error' : (${'' eq message.phone} ?'info':'')">
+                <td th:text="${message.id}" th:width="100" align="center">1</td>
+                <!--                <td th:width="70" th:text="${message.title}">Title ...</td>-->
+                <td th:text="${message.login}" th:width="120" align="center">1</td>
+                <td th:text="${message.ip}" th:width="120" align="center">1</td>
+                <td th:text="${message.phone}" th:width="150" align="center">1</td>
+                <td th:text="${message.text}" th:width="555"><a href="#">Text ...</a></td>
+            </tr>
+        </div>
+    </table>
+    <hr/>
+    <div th:replace="fragments/navigator :: navigator">&nbsp;</div>
+    <br>
+    <div th:replace="fragments/footer :: footer">&nbsp;</div>
+</div>
+</body>
+</html>

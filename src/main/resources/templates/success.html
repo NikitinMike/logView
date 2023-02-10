@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+<body>
+<div layout:fragment="content">
+    <div th:replace="fragments/header :: header">&nbsp;</div>
+    <div class="container">
+        <div class="col-sm-12">
+            <div class="alert alert-success">Ваша заявка принята,
+                наши специалисты свяжутся с Вами в ближайшее время!
+            </div>
+            <p>
+                <a href="start">В начало</a>
+            </p>
+        </div>
+    </div>
+    <div th:replace="fragments/footer :: footer">&nbsp;</div>
+</div>
+</body>
+</html>
