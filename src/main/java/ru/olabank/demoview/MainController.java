@@ -3,7 +3,6 @@ package ru.olabank.demoview;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +20,7 @@ import java.util.*;
 
 import static java.util.Comparator.comparing;
 import static org.springframework.web.context.request.RequestContextHolder.currentRequestAttributes;
-import static ru.olabank.demoview.ReadAuthLogsService.readAuthLog;
-import static ru.olabank.demoview.ReadAuthLogsService.readFiles;
+import static ru.olabank.demoview.ReadAuthLogsService.*;
 
 @Controller
 @Slf4j
@@ -35,27 +33,18 @@ public class MainController {
 //    @DateTimeFormat(pattern = "dd/MM/yyyy")
     Date date = new Date();
     String order = "";
+    boolean errorsOnly = false;
 
     @GetMapping("/{date}")
     @ResponseBody
     public ModelAndView dataPageGet(Model model, @PathVariable String date) throws ParseException {
-        if (date == null) this.date = new Date();
 //        log.info("Date in {} / {} ", date, this.date);
-        if (!"favicon.ico".equals(date)) this.date = dtf.parse(date);
+        if (date == null || "favicon.ico".equals(date)) this.date = new Date();
+        if (date != null && date.matches("....-..-..")) this.date = dtf.parse(date);
         model.addAttribute("date", getDate());
         model.addAttribute("messages", messages());
 //        log.info("Date out {} ", this.date);
-        return new ModelAndView("page");
-    }
-
-    @GetMapping("/test/{date}")
-    @ResponseBody
-//    public ResponseEntity<HashMap<String, String>> test(){
-    public ResponseEntity<List<DataMessage>> test(@PathVariable Date date) {
-//    public Object[] test() {
-        log.info(String.valueOf(getHeaders()));
-        return ResponseEntity.ok(readAuthLog(dtf.format(date)));
-//        return readAuthLog().toArray();
+        return new ModelAndView("homePage");
     }
 
     HashMap<String, String> getHeaders() {
@@ -69,12 +58,11 @@ public class MainController {
         return headers;
     }
 
-    @ModelAttribute("messages")
+    //    @ModelAttribute("messages")
     public List<DataMessage> messages() {
-        List<DataMessage> list = readAuthLog(dtf.format(date));
-//        if (errorsOnly) list.removeIf(l->!"ERROR".equals(l.getTitle()));
-        if (errorsOnly) list.removeIf(l->!l.phone.equals(""));
-        Collections.reverse(list);
+        if (date.after(new Date())) date = new Date();
+        List<DataMessage> list = readAuthLog(date);
+        if (errorsOnly) list.removeIf(l -> !l.phone.equals(""));
         switch (order) {
             case "phone":
                 list.sort(Comparator.nullsLast(comparing(l -> l.phone)));
@@ -88,6 +76,7 @@ public class MainController {
             default:
                 break;
         }
+        Collections.reverse(list);
         return list;
     }
 
@@ -96,20 +85,19 @@ public class MainController {
         return dtf.format(date);
     }
 
-    @GetMapping("/")
+    @GetMapping({"/", "/start"})
     @ResponseBody
     public ModelAndView startPageGet() {
         date = new Date();
         order = "";
-        return new ModelAndView("page");
+        return new ModelAndView("redirect:/" + moveDate(0));
     }
 
-    boolean errorsOnly = false;
     @GetMapping("/errors")
     @ResponseBody
     public ModelAndView errorsOnly() {
-        errorsOnly =!errorsOnly;
-        return new ModelAndView("redirect:/"+ moveDate(0));
+        errorsOnly = !errorsOnly;
+        return new ModelAndView("redirect:/" + moveDate(0));
     }
 
     @GetMapping("/list")
@@ -117,6 +105,7 @@ public class MainController {
     public ModelAndView listPageGet(Model model) throws IOException {
         List<String> files = readFiles();
         Collections.reverse(files);
+        model.addAttribute("date", getDate());
         model.addAttribute("files", files); //  singleton("")
         return new ModelAndView("list");
     }
@@ -155,7 +144,12 @@ public class MainController {
     }
 
     String moveDate(int days) {
-        date = new Date(date.getTime() + oneDay * days);
+        if (days != 0)
+            while (checkFile(new Date(date.getTime() + oneDay * days)) == null)
+                if (days > 999 || days < -999) break;
+                else days += (days < 0) ? -1 : 1;
+        if (new Date(date.getTime() + oneDay * days).after(new Date())) date = new Date();
+        else date = new Date(date.getTime() + oneDay * days);
         return dtf.format(date);
     }
 }

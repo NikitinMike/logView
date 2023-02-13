@@ -8,25 +8,31 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 
 import static org.springframework.web.context.request.RequestContextHolder.currentRequestAttributes;
+import static ru.olabank.demoview.MainController.dtf;
 
 @Slf4j
 public class ReadAuthLogsService {
     static final String basePath = "/home/olauser/logs/auth/";
 
-    public static List<DataMessage> readAuthLog(String date) {
-        log.info("GET {} {} Ok", date, ((ServletRequestAttributes) currentRequestAttributes()).getRequest().getRemoteAddr());
-        File fileZip = new File(basePath + "archived/auth." + date + ".0.log.gz");
-        Path logFile = fileZip.isFile() && fileZip.canRead()
-                ? decompressGzip(fileZip.toPath(), new File("auth.log").toPath())
-                : new File(basePath + "auth.log").toPath();
+    static public Path checkFile(Date date){
+        File fileZip = new File(basePath + "archived/auth." + dtf.format(date) + ".0.log.gz");
+        if(fileZip.isFile() && fileZip.canRead())
+            return decompressGzip(fileZip.toPath(), new File("auth.log").toPath());
+        return null;
+    }
 
-        try (Stream<String> lines = Files.lines(logFile)) {
+    public static List<DataMessage> readAuthLog(Date dt) {
+        log.info("GET {} {} Ok", dtf.format(dt), ((ServletRequestAttributes) currentRequestAttributes()).getRequest().getRemoteAddr());
+        Path dataFile = checkFile(dt);
+        if (dataFile==null) dataFile = new File(basePath + "auth.log").toPath();
+        try (Stream<String> lines = Files.lines(dataFile)) {
             return lines.filter(l -> !l.matches(".+(main|Ok|GET|request|TokenController|password|CLIENT|OAuthDao).+"))
                     .filter(l -> l.matches(".+ru.olabank.sprint.auth.+"))
                     .filter(l -> l.matches(".+http-nio-8072-exec-.+"))
