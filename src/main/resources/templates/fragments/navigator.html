@@ -3,15 +3,15 @@
 <body>
 <div th:fragment="navigator" class="container navigator-text" align="center">
     <form th:action="@{/}" method="get" th:object="${date}">
-        <button><a th:href="@{/month}"> <<<< </a></button>
-        <button><a th:href="@{/week}"> <<< </a></button>
-        <button><a th:href="@{/yesterday}"> << </a></button>
+        <button><a th:href="@{/list}"> ... </a></button>
+        <button><a th:href="@{/nextweek}"> <<< </a></button>
+        <button><a th:href="@{/nextday}"> << </a></button>
 <!--        <label for="date" th:text="${date}"> date </label>-->
 <!--        <input id="date" type="date" th:field="${date}" th:value="${date}"/>-->
         <button type="Submit" class="button" th:text="${date}">OK</button>
-        <button><a th:href="@{/nextday}"> >> </a></button>
-        <button><a th:href="@{/nextweek}"> >>> </a></button>
-        <button><a th:href="@{/list}"> ... </a></button>
+        <button><a th:href="@{/yesterday}"> >> </a></button>
+        <button><a th:href="@{/lastweek}"> >>> </a></button>
+        <button><a th:href="@{/lastmonth}"> >>>> </a></button>
     </form>
 </div>
 </body>

@@ -123,12 +123,12 @@ public class MainController {
         return new ModelAndView("redirect:/" + moveDate(-1));
     }
 
-    @GetMapping("/week")
+    @GetMapping("/lastweek")
     public ModelAndView weekPageGet() {
         return new ModelAndView("redirect:/" + moveDate(-7));
     }
 
-    @GetMapping("/month")
+    @GetMapping("/lastmonth")
     public ModelAndView monthPageGet() {
         return new ModelAndView("redirect:/" + moveDate(-30));
     }
