@@ -9,7 +9,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
@@ -33,15 +32,14 @@ public class BasicConfigurationIntegrationTest {
     }
 
     @Test
-    public void whenLoggedUserRequestsHomePage_ThenSuccess() throws IllegalStateException, IOException {
+    public void whenLoggedUserRequestsHomePage_ThenSuccess() throws IllegalStateException {
         ResponseEntity<String> response = restTemplate.getForEntity(base.toString(), String.class);
 //        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(Objects.requireNonNull(response.getBody()).contains("Baeldung"));
     }
 
     @Test
-    public void whenUserWithWrongCredentials_thenUnauthorizedPage() throws Exception {
-
+    public void whenUserWithWrongCredentials_thenUnauthorizedPage() {
         restTemplate = new TestRestTemplate("user", "wrongpassword");
         ResponseEntity<String> response = restTemplate.getForEntity(base.toString(), String.class);
 //        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
