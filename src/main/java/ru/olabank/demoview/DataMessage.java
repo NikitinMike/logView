@@ -10,7 +10,7 @@ import java.io.IOException;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-class DataMessage {
+public class DataMessage {
     final static GeoService service;
 
     static {

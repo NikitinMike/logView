@@ -16,6 +16,7 @@
             color: white;
         }
     </style>
+    <title>Home Page</title>
 </head>
 <body>
 <div th:replace="fragments/header :: header">&nbsp;</div>
@@ -39,7 +40,12 @@
                 th:class="${message.title eq 'ERROR'}? 'error' : (${'' eq message.phone} ?'info':'')">
                 <td th:text="${message.id}" th:width="100" align="center">1</td>
                 <!--                <td th:width="70" th:text="${message.title}">Title ...</td>-->
-                <td th:text="${message.login}" th:width="120" align="center">1</td>
+                <td  align="center" width="120">
+<!--                    <a th:href="@{/filter/login}">-->
+                    <a th:href="@{/filter/{id}(id=${message.login})}" >
+                        [[${message.login}]]
+                    </a>
+                </td>
                 <td th:text="${message.ip}" th:width="120" align="center">1</td>
                 <td th:text="${message.phone}" th:width="150" align="center">1</td>
                 <td th:text="${message.text}" th:width="555"><a href="#">Text ...</a></td>

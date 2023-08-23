@@ -28,11 +28,12 @@ import static ru.olabank.demoview.ReadAuthLogsService.*;
 public class MainController {
 
     static final SimpleDateFormat dtf = new SimpleDateFormat("yyyy-MM-dd");
-    static long oneDay = 3600000L * 24;
+    static long oneDay = 3600_000L * 24;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
 //    @DateTimeFormat(pattern = "dd/MM/yyyy")
     Date date = new Date();
     String order = "";
+    String filter = null;
     boolean errorsOnly = false;
 
     @GetMapping("/{date}")
@@ -42,7 +43,7 @@ public class MainController {
         if (date == null || "favicon.ico".equals(date)) this.date = new Date();
         if (date != null && date.matches("....-..-..")) this.date = dtf.parse(date);
         model.addAttribute("date", getDate());
-        model.addAttribute("messages", messages());
+        model.addAttribute("messages", getMessages(this.date));
 //        log.info("Date out {} ", this.date);
         return new ModelAndView("homePage");
     }
@@ -59,10 +60,15 @@ public class MainController {
     }
 
     //    @ModelAttribute("messages")
-    public List<DataMessage> messages() {
+    public List<DataMessage> getMessages(Date date) {
         if (date.after(new Date())) date = new Date();
         List<DataMessage> list = readAuthLog(date);
-        if (errorsOnly) list.removeIf(l -> !l.phone.equals(""));
+        if (errorsOnly) list.removeIf(l -> !l.phone.isEmpty());
+        if (filter != null) list.removeIf(l -> !l.login.equals(filter));
+        if (list.isEmpty()) {
+            this.date = new Date(date.getTime() - oneDay);
+            return getMessages(this.date);
+        }
         switch (order) {
             case "phone":
                 list.sort(Comparator.nullsLast(comparing(l -> l.phone)));
@@ -90,6 +96,8 @@ public class MainController {
     public ModelAndView startPageGet() {
         date = new Date();
         order = "";
+//        if (date.equals(dtf.format(this.date)))
+        filter = null;
         return new ModelAndView("redirect:/" + moveDate(0));
     }
 
@@ -97,6 +105,7 @@ public class MainController {
     @ResponseBody
     public ModelAndView errorsOnly() {
         errorsOnly = !errorsOnly;
+        filter = null;
         return new ModelAndView("redirect:/" + moveDate(0));
     }
 
@@ -115,6 +124,14 @@ public class MainController {
     public ModelAndView setOrder(@PathVariable String order) {
         this.order = "";
         if (order.matches("ip|login|phone")) this.order = order.trim();
+        return new ModelAndView("redirect:/" + dtf.format(date));
+    }
+
+    @GetMapping("/filter/{filter}")
+    @ResponseBody
+    public ModelAndView filterSet(@PathVariable String filter) {
+        if (filter != null)
+            this.filter = filter.equals(this.filter) ? null : filter; // filter.matches(".+")
         return new ModelAndView("redirect:/" + dtf.format(date));
     }
 
