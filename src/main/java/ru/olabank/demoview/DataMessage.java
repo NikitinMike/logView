@@ -27,10 +27,13 @@ public class DataMessage {
     String ip = "";
     String login = "";
     String phone = "";
+    String date = "";
+    Boolean print = true;
 
     public DataMessage(String msg) {
         String[] m = msg.replaceAll("[{},]", "").split("\\s+", 6);
-//            id = m[0] + " " + m[1].substring(0, 8);
+        date = m[0];
+        print = false;
         id = m[1].substring(0, 8);
         title = m[2]; // String.format("%s %s", m[2], m[3]);
         text = m[5];

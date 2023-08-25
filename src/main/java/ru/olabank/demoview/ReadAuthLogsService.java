@@ -29,13 +29,25 @@ public class ReadAuthLogsService {
     }
 
     public static List<DataMessage> readAuthLog(Date dt) {
-        log.info("GET {} {} Ok", dtf.format(dt), ((ServletRequestAttributes) currentRequestAttributes()).getRequest().getRemoteAddr());
+        log.info("GET {} {} Ok", dtf.format(dt), getUserIP());
         Path dataFile = checkFile(dt);
         if (dataFile==null) dataFile = new File(basePath + "auth.log").toPath();
+        return readDataFile(dataFile);
+    }
+
+    private static String getUserIP() {
+        return ((ServletRequestAttributes) currentRequestAttributes()).getRequest().getRemoteAddr();
+    }
+
+    public static List<DataMessage> readAuthLogs() {
+        log.info("GET logs from {} Ok", getUserIP());
+        return readDataFile(new File(basePath + "authlogs").toPath());
+    }
+
+    static List<DataMessage> readDataFile(Path dataFile){
         try (Stream<String> lines = Files.lines(dataFile)) {
             return lines.filter(l -> !l.matches(".+(main|Ok|GET|request|TokenController|password|CLIENT|OAuthDao).+"))
-                    .filter(l -> l.matches(".+ru.olabank.sprint.auth.+"))
-                    .filter(l -> l.matches(".+http-nio-8072-exec-.+"))
+                    .filter(l -> l.matches(".+ru.olabank.sprint.auth.+") && l.matches(".+http-nio-8072-exec-.+"))
                     .map(ReadAuthLogsService::cleanAll).map(DataMessage::new).collect(Collectors.toList());
         } catch (IOException e) {
             throw new RuntimeException(e);

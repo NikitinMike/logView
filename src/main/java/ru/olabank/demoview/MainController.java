@@ -62,13 +62,20 @@ public class MainController {
     //    @ModelAttribute("messages")
     public List<DataMessage> getMessages(Date date) {
         if (date.after(new Date())) date = new Date();
-        List<DataMessage> list = readAuthLog(date);
+        List<DataMessage> list = filter == null ? readAuthLog(date) : readAuthLogs();
         if (errorsOnly) list.removeIf(l -> !l.phone.isEmpty());
         if (filter != null) list.removeIf(l -> !l.login.equals(filter));
         if (list.isEmpty()) {
             this.date = new Date(date.getTime() - oneDay);
             return getMessages(this.date);
         }
+
+        String current = null;
+        for (DataMessage message : list) {
+            message.print=!message.date.equals(current);
+            current = message.date;
+        }
+
         switch (order) {
             case "phone":
                 list.sort(Comparator.nullsLast(comparing(l -> l.phone)));
@@ -88,7 +95,7 @@ public class MainController {
 
     @ModelAttribute("date")
     public String getDate() {
-        return dtf.format(date);
+        return filter == null ? dtf.format(date) : null;
     }
 
     @GetMapping({"/", "/start"})

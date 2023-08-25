@@ -15,6 +15,12 @@
             background-color: darkcyan;
             color: white;
         }
+        td.white {
+            color: white;
+        }
+        td.blue {
+            color: blue;
+        }
     </style>
     <title>Home Page</title>
 </head>
@@ -25,7 +31,8 @@
     <hr/>
     <table>
         <thead align="center">
-        <td th:text="${date}">дата/время</td>
+        <td th:if="${date}==null">дата</td>
+        <td th:text="${date}">время</td>
         <td><a th:href="@{/order/login}">логин</a></td>
         <td><a th:href="@{/order/ip}">IP адрес</a></td>
         <td><a th:href="@{/order/phone}">ID устройства</a></td>
@@ -34,21 +41,24 @@
             /
             <a th:href="@{/errors}"> только ошибки и регистрации </a>
         </td>
+        <td></td>
         </thead>
-        <div class="row">
+        <div class="row" th:with="group=null">
             <tr th:each="message : ${messages}"
                 th:class="${message.title eq 'ERROR'}? 'error' : (${'' eq message.phone} ?'info':'')">
-                <td th:text="${message.id}" th:width="100" align="center">1</td>
-                <!--                <td th:width="70" th:text="${message.title}">Title ...</td>-->
-                <td  align="center" width="120">
-<!--                    <a th:href="@{/filter/login}">-->
-                    <a th:href="@{/filter/{id}(id=${message.login})}" >
+                <td th:if="${date}==null" th:width="100" align="center" th:class="${message.print}?'blue':'white'">
+                    [[${message.date}]]
+                </td>
+                <td th:width="100" align="center">[[${message.id}]]</td>
+                <td align="center" width="120">
+                    <a th:href="@{/filter/{id}(id=${message.login})}">
                         [[${message.login}]]
                     </a>
                 </td>
-                <td th:text="${message.ip}" th:width="120" align="center">1</td>
-                <td th:text="${message.phone}" th:width="150" align="center">1</td>
-                <td th:text="${message.text}" th:width="555"><a href="#">Text ...</a></td>
+                <td th:width="120" align="center">[[${message.ip}]]</td>
+                <td th:width="150" align="center">[[${message.phone}]]</td>
+                <td th:width="555">[[${message.text}]]</td>
+                <td th:with="group=${message.date}"><a href="#"></a></td>
             </tr>
         </div>
     </table>

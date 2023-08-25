@@ -8,7 +8,7 @@
         <button><a th:href="@{/nextday}"> << </a></button>
 <!--        <label for="date" th:text="${date}"> date </label>-->
 <!--        <input id="date" type="date" th:field="${date}" th:value="${date}"/>-->
-        <button type="Submit" class="button" th:text="${date}">OK</button>
+        <button type="Submit" class="button" th:text="${date}==null?'BACK':${date}">OK</button>
         <button><a th:href="@{/yesterday}"> >> </a></button>
         <button><a th:href="@{/lastweek}"> >>> </a></button>
         <button><a th:href="@{/lastmonth}"> >>>> </a></button>
